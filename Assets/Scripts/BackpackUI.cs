@@ -19,7 +19,10 @@ public class BackpackUI : MonoBehaviour
     [SerializeField] private BackpackController backpackController;
     private int lastSelectedSlot;
     private Tween tweenUI;
-
+    private GraphicRaycaster m_Raycaster;
+    private PointerEventData m_PointerEventData;
+    private EventSystem m_EventSystem;
+    
     [Serializable]
     public class Slot
     {
@@ -28,10 +31,6 @@ public class BackpackUI : MonoBehaviour
         public CanvasGroup canvasGroup;
     }
     
-    private GraphicRaycaster m_Raycaster;
-    private PointerEventData m_PointerEventData;
-    private EventSystem m_EventSystem;
-
     private void Start()
     {
         m_Raycaster = GetComponent<GraphicRaycaster>();
@@ -44,7 +43,8 @@ public class BackpackUI : MonoBehaviour
 
         SlotRaycast();
     }
-
+    
+    // Обновление UI ячеек инвентаря, показываем игроку занятые и незанятые ячейки
     public void UpdateActiveSlots(List<int> activeSlots)
     {
         foreach (var slot in slots)
@@ -83,6 +83,7 @@ public class BackpackUI : MonoBehaviour
         enabled = isActive;
     }
     
+    // Поиск ячейки в рюкзаке, на который игрок нацелен камерой
     private void SlotRaycast()
     {
         m_PointerEventData = new PointerEventData(m_EventSystem);
@@ -109,6 +110,7 @@ public class BackpackUI : MonoBehaviour
             UpdateEmptyUI();
         }
         
+        // Когда игрок захочет выбрать предмет (и он найден) - выдаем ему этот предмет
         if (Input.GetMouseButtonUp(0) && isSlotFound)
         {
             var item = backpackController.GetItem(lastSelectedSlot);
@@ -121,8 +123,10 @@ public class BackpackUI : MonoBehaviour
         }
     }
     
+    // Обновляем UI по заданному индексу ячейки, выводим информацию о предмете
     private void UpdateUI(int slotIndex)
     {
+        // Защита, чтобы не повторять обновление множество раз
         if (slotIndex == lastSelectedSlot)
             return;
         
@@ -130,6 +134,7 @@ public class BackpackUI : MonoBehaviour
         var itemData = backpackController.GetItem(slotIndex);
         if (itemData == null)
         {
+            // Если оказалось, что ячейка пустая - выводим пустой UI
             UpdateEmptyUI();
             return;
         }
@@ -138,6 +143,7 @@ public class BackpackUI : MonoBehaviour
         itemWeight.text = $"Weight: {itemData.weight}";
     }
     
+    // Обновление UI для случаев, когда мы не можем показать выбранный предмет
     private void UpdateEmptyUI()
     {
         itemName.text = "Select Item";

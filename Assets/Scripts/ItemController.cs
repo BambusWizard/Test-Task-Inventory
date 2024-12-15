@@ -16,7 +16,9 @@ public class ItemController : MonoBehaviour
     public bool IsCanBeAttached() => isCanBeAttached;
     
     public ItemData GetItemData() => itemData;
-
+    
+    // Тут описаны вспомогательные методы, помогающие изменить стейт предмета на нужный в определенном контексте
+    #region Item State
     public void BackpackIn()
     {
         isCanBeInteracted = false;
@@ -46,6 +48,7 @@ public class ItemController : MonoBehaviour
         triggerCollider.enabled = false;
         physicsCollider.enabled = true;
     }
+    #endregion
 
     #region UnityEvents - InteractableObject
     public void OnItemDrag(CachedItem cachedItem)

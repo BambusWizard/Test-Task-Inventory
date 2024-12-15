@@ -33,7 +33,7 @@ public class BackpackController : MonoBehaviour
     {
         backpackUI.SetVisibility(false);
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.isTrigger && other.CompareTag("Interactable"))
@@ -44,6 +44,7 @@ public class BackpackController : MonoBehaviour
     
     public void OpenUI(CachedItem item)
     {
+        // Если в руке нет предмета - открываем UI рюкзака для взаимодействия с ним
         if (item == null)
         {
             var occupiedSlots = slots.Where(x => x.isOccupied).ToList().ConvertAll(x => x.slotID);
@@ -52,6 +53,7 @@ public class BackpackController : MonoBehaviour
             return;
         }
         
+        // Либо добавляем предмет в рюкзак
         TryAddItem(item.item);
     }
     
@@ -76,6 +78,7 @@ public class BackpackController : MonoBehaviour
         if (slot.isOccupied)
             return;
         
+        // Добавляем предмет, если все проверки на возможность добавления предмета в рюкзак пройдены
         item.transform.parent = slot.attachmentPoint;
         slot.isOccupied = true;
         slot.item = item;

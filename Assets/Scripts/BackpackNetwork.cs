@@ -21,6 +21,7 @@ public class BackpackNetwork : MonoBehaviour
         StartCoroutine(Request(itemDataString));
     }
     
+    // Простой POST запрос на сервер при изменении состояния рюкзака
     private IEnumerator Request(string data)
     {
         var form = new WWWForm();
